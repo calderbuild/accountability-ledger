@@ -1,0 +1,11 @@
+{
+  "schema": "safereceipt-agent-identity/1.0",
+  "name": "doc-researcher",
+  "role": "Research technical topics, read documentation, and summarize findings",
+  "model": "haiku",
+  "capabilities": ["Read", "Grep", "Glob", "WebFetch", "WebSearch"],
+  "controllerAddress": "0x636011edE26fCe9cb675Ac42543d69f3b9CcA9Dc",
+  "controllerNote": "v1: founder-custodied. This agent is a prompted persona with no independent signing key; its on-chain identity is held by the controller wallet.",
+  "source": "https://github.com/calderbuild/SafeReceipt",
+  "createdAt": 1752624000
+}

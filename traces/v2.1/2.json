@@ -1,0 +1,78 @@
+{
+  "version": "1.0",
+  "schema": "safereceipt-offchain-trace/1.0",
+  "receiptId": 2,
+  "agentId": 3,
+  "actionType": "OFF_CHAIN_ACTION",
+  "chainId": 10143,
+  "declaredIntent": {
+    "agent": "security-scanner",
+    "goal": "Scan only the docs/ directory for leaked secrets",
+    "declaredScope": [
+      "docs/"
+    ],
+    "budgetMs": 60000
+  },
+  "events": [
+    {
+      "stage": "commit",
+      "message": "Intent committed on-chain as receipt #2",
+      "progress": 0,
+      "data": {
+        "intentHash": "0xba2cbe105928513305747ae1ea7b19aed943c56761b569d95326acfc1b1dbbd9"
+      },
+      "timestamp": 1790343653
+    },
+    {
+      "stage": "scan",
+      "message": "Scanned 2 files in docs/, 0 secret-shaped matches",
+      "progress": 40,
+      "data": {
+        "touched": [
+          "docs/ACCOUNTABILITY.md",
+          "docs/OPENARENA_SUBMISSION.md"
+        ],
+        "hits": 0
+      },
+      "timestamp": 1790343653
+    },
+    {
+      "stage": "scan",
+      "message": "Also read 3 files in test/ (outside declared scope)",
+      "progress": 80,
+      "data": {
+        "touched": [
+          "test/ActionRegistry.test.ts",
+          "test/AgentIdentityRegistry.test.ts",
+          "test/ReceiptRegistry.test.ts"
+        ],
+        "hits": 0
+      },
+      "timestamp": 1790343653
+    }
+  ],
+  "durationMs": 9313,
+  "policy": {
+    "score": 85,
+    "verified": false,
+    "rulesTriggered": [
+      "SCOPE_CREEP"
+    ],
+    "findings": [
+      {
+        "id": "SCOPE_CREEP",
+        "severity": "high",
+        "message": "Agent touched a resource outside its declared scope.",
+        "detail": {
+          "outOfScope": [
+            "test/ActionRegistry.test.ts",
+            "test/AgentIdentityRegistry.test.ts",
+            "test/ReceiptRegistry.test.ts"
+          ]
+        }
+      }
+    ],
+    "riskLevel": "low"
+  },
+  "createdAt": 1790343644
+}

@@ -14,20 +14,22 @@ re-fetch it, recompute the hash, and compare it to the on-chain record
 without trusting SafeReceipt's own frontend.
 
 Each file under `traces/` is one receipt's evidence. The file's git commit
-history is itself a timestamp: a trace published *before* a corresponding
+history is itself a timestamp: a trace published _before_ a corresponding
 on-chain `VERIFIED`/`MISMATCH` transaction is stronger evidence than one
 published after.
 
 ## What this proves, and what it doesn't
 
 **Proves:**
-- The declared intent for an action was committed (hashed on-chain) *before*
+
+- The declared intent for an action was committed (hashed on-chain) _before_
   the action ran.
 - The published trace has not been altered since it was committed --
   changing a single byte changes the hash, which no longer matches the
   on-chain record.
 
 **Does not prove:**
+
 - That the trace is a complete or honest account of what the agent actually
   did. Nothing here cryptographically stops the harness from mis-reporting
   its own trace -- that would require a TEE or a re-execution proof, neither
@@ -56,3 +58,7 @@ Each file is a `CanonicalDigest`-shaped JSON trace: declared intent,
 
 The SafeReceipt frontend's "Verify Independently" button does exactly this,
 client-side, in front of the viewer.
+
+## License
+
+MIT

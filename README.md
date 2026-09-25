@@ -5,18 +5,16 @@ agent accountability layer, built for BUIDL_QUESTS 2026.
 
 ## What this is
 
-`ActionRegistry.sol` (deployed on
-[Monad Testnet](https://testnet.monadscan.com) and
-[Base Sepolia](https://sepolia.basescan.org)) only stores a hash of each
-agent action's outcome on-chain. This repo hosts the full pre-image --
+`ActionRegistry.sol` on [Monad Testnet](https://testnet.monadscan.com) only
+stores a hash of each agent action's outcome on-chain. This repo hosts the full pre-image --
 the trace JSON that hashes to that value -- so anyone can independently
 re-fetch it, recompute the hash, and compare it to the on-chain record
 without trusting SafeReceipt's own frontend.
 
-Each file under `traces/` is one receipt's evidence. The file's git commit
-history is itself a timestamp: a trace published _before_ a corresponding
-on-chain `VERIFIED`/`MISMATCH` transaction is stronger evidence than one
-published after.
+Each file under `traces/` is one receipt's evidence. The SafeReceipt wrapper
+pushes the trace and waits until it is readable before it links the outcome
+on-chain, so every V2.1 evidence URI resolved at the moment it was written.
+Traces are public and unredacted.
 
 ## What this proves, and what it doesn't
 
@@ -39,25 +37,30 @@ published after.
 ## Format
 
 ```
-traces/{receiptId}.json
+traces/v2.1/{receiptId}.json   current ActionRegistry (V2.1)
+traces/{receiptId}.json        V2.0 ActionRegistry, kept for its historical receipts
+agents/{name}.json             agent metadata (the tokenURI of each agent NFT)
 ```
 
-Each file is a `CanonicalDigest`-shaped JSON trace: declared intent,
-`PipelineEvent[]` execution log, computed `outcomeHash`, and the
-`agentId` (from `AgentIdentityRegistry.sol`) that produced it.
+Receipt ids restart at 1 on each registry deploy, hence one directory per
+version. Each trace holds `receiptId`, `agentId`, `declaredIntent`, the
+`events` log (`{stage, message, progress, data, timestamp}`), `durationMs`, and
+the `policy` result. The outcome hash is not stored in the file.
 
 ## Verifying a receipt independently
 
 1. Read the on-chain receipt from `ActionRegistry.sol` (`getReceipt(receiptId)`)
    to get `outcomeHash` and `evidenceURI`.
 2. Fetch the corresponding `traces/{receiptId}.json` file from this repo.
-3. Recompute the hash of the fetched JSON using the same canonicalization
-   rules as `SafeReceipt/frontend/src/lib/canonicalize.ts`.
+3. Recompute the hash: drop top-level `status`, `linkedTxHash` and
+   `outcomeHash` if present, sort keys recursively, serialize as compact JSON,
+   keccak256 (`SafeReceipt/frontend/src/lib/v2.ts` `hashTrace`).
 4. Compare it to the on-chain `outcomeHash`. Match = the published record is
    the one that was actually committed on-chain.
 
-The SafeReceipt frontend's "Verify Independently" button does exactly this,
-client-side, in front of the viewer.
+The SafeReceipt Fleet page's "Verify independently" button does this in the
+browser, and also checks that the trace names the same receipt and agent,
+re-runs the policy rules, and checks the filer still owns the agent.
 
 ## License
 

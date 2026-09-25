@@ -1,0 +1,71 @@
+{
+  "version": "1.0",
+  "schema": "safereceipt-offchain-trace/1.0",
+  "receiptId": 1,
+  "agentId": 2,
+  "actionType": "OFF_CHAIN_ACTION",
+  "chainId": 10143,
+  "declaredIntent": {
+    "agent": "code-reviewer",
+    "goal": "Run the SafeReceipt contract test suite and confirm all tests pass",
+    "declaredScope": [
+      "test/",
+      "contracts/"
+    ],
+    "budgetMs": 180000
+  },
+  "events": [
+    {
+      "stage": "commit",
+      "message": "Intent committed on-chain as receipt #1",
+      "progress": 0,
+      "data": {
+        "intentHash": "0x360741739a7bb864265472cbdfbc7d033d9dc3667e5dbf19a4c8e3a078bbb2c1"
+      },
+      "timestamp": 1790343613
+    },
+    {
+      "stage": "start",
+      "message": "Invoking npm run test",
+      "progress": 0,
+      "data": {
+        "touched": [
+          "test/",
+          "contracts/"
+        ]
+      },
+      "timestamp": 1790343613
+    },
+    {
+      "stage": "test-run",
+      "message": "Test suite completed: 50 passing",
+      "progress": 80,
+      "data": {
+        "passing": 50,
+        "touched": [
+          "test/",
+          "contracts/"
+        ]
+      },
+      "timestamp": 1790343615
+    },
+    {
+      "stage": "policy",
+      "message": "Policy score 100 (low)",
+      "progress": 100,
+      "data": {
+        "rulesTriggered": []
+      },
+      "timestamp": 1790343615
+    }
+  ],
+  "durationMs": 10953,
+  "policy": {
+    "score": 100,
+    "verified": true,
+    "rulesTriggered": [],
+    "findings": [],
+    "riskLevel": "low"
+  },
+  "createdAt": 1790343604
+}
